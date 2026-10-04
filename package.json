@@ -1,0 +1,28 @@
+{
+  "name": "roundtable",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"api,web\" -c \"yellow.bold,cyan.bold\" --kill-others-on-fail \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:all": "docker compose up -d && concurrently -n \"api,web\" -c \"yellow.bold,cyan.bold\" --kill-others-on-fail \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:web": "npm run dev -w @roundtable/web",
+    "dev:api": "npm run start:dev -w @roundtable/api",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "build:shared": "npm run build -w @roundtable/shared",
+    "build:api": "npm run build -w @roundtable/api",
+    "build:web": "npm run build -w @roundtable/web",
+    "build": "npm run build:shared && npm run build:api && npm run build:web",
+    "db:generate": "npx prisma generate --schema=services/api/prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=services/api/prisma/schema.prisma",
+    "db:push": "npx prisma db push --schema=services/api/prisma/schema.prisma",
+    "db:seed": "npm run seed -w @roundtable/api"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
